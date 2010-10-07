@@ -1,6 +1,6 @@
 [submodule "ezpublish-i18n"]
 	path = ezpublish-i18n
-	url = git@github.com:anapol/ezpublish-i18n.git
+	url = git://github.com/anapol/ezpublish-i18n.git
 [submodule "ezpublish"]
 	path = ezpublish
-	url = git@github.com:anapol/ezpublish.git
+	url = git://github.com/anapol/ezpublish.git
