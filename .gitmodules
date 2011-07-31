@@ -4,3 +4,21 @@
 [submodule "ezpublish"]
 	path = ezpublish
 	url = git://github.com/anapol/ezpublish.git
+[submodule "extension/ezjscore"]
+	path = extension/ezjscore
+	url = git://github.com/anapol/ezjscore.git
+[submodule "extension/ezmultiupload"]
+	path = extension/ezmultiupload
+	url = git://github.com/anapol/ezmultiupload.git
+[submodule "extension/ezoe"]
+	path = extension/ezoe
+	url = git://github.com/anapol/ezoe.git
+[submodule "extension/ezstyleeditor"]
+	path = extension/ezstyleeditor
+	url = git://github.com/anapol/ezstyleeditor.git
+[submodule "extension/ezwebin-repo"]
+	path = extension/ezwebin-repo
+	url = git://github.com/anapol/ezwebin.git
+[submodule "extension/ezwt-repo"]
+	path = extension/ezwt-repo
+	url = git://github.com/anapol/ezwt.git
