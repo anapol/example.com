@@ -1,0 +1,6 @@
+The var directory is symlinked to one level above this directory.
+
+The reason is that we prefer .gitignoring of only disposable objects, not
+the actual content data in ezpublish/var... 
+
+Should help prevent loosing data in var by not implying they are tracked.
