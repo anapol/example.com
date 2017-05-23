@@ -1,0 +1,1 @@
+../ezpublish-legacy/ezpm.php

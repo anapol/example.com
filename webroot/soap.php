@@ -1,0 +1,1 @@
+../ezpublish-legacy/soap.php

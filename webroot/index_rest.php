@@ -1,0 +1,1 @@
+../ezpublish-legacy/index_rest.php

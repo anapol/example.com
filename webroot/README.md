@@ -1,0 +1,1 @@
+../ezpublish-legacy/README.md
