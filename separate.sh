@@ -34,7 +34,7 @@ AASETTINGSDIR=$(relative_path $4)
 AAI18NDIR=$(relative_path $5)
 AAVARDIR=$(relative_path $6)
 
-if [ -z "$AAVARDIR" ]; then
+if [ -z $6 ]; then
  echo "Usage: $0 ezpublish-legacy_checkout_dir deployment_dir aaextension_dir aasettings_dir aai18n_dir aavar_dir"
  exit 1
 fi
@@ -96,6 +96,12 @@ symlink "$(relative_path $AASETTINGSDIR/siteaccess $DEST/settings/)" "$DEST"/set
 rm "$DEST"/settings/override
 symlink "$(relative_path $AASETTINGSDIR/override $DEST/settings/)" "$DEST"/settings/override
 
+
+
+# autoload.php uses __DIR__./var/ reference, which isn't resolved to the relinked var dir...
+echo "### Relinking autoload.php"
+rm "$DEST"/autoload.php
+cp $EZPCHECKOUT/autoload.php "$DEST"/autoload.php
 
 echo "Done."
 
