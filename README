@@ -1,3 +1,8 @@
+Temporary way to develop against ezpublish while keeping the codebase
+separate for easy updates...
+
+Most of this should be migrated to Composer.
+
 The var directory is symlinked to one level above this directory.
 
 The reason is that we prefer .gitignoring of only disposable objects, not

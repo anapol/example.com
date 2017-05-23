@@ -2,9 +2,9 @@
 /**
  * File containing the LegacyKernelInstaller class.
  *
- * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version 2014.11.1
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ * @version //autogentag//
  */
 
 namespace eZ\Publish\Composer;
@@ -78,9 +78,24 @@ class LegacyKernelInstaller extends LegacyInstaller
         $fileSystem->copyThenRemove( $this->ezpublishLegacyDir, $actualLegacyDir );
 
         // if parent::install installed binaries, then the resulting shell/bat stubs will not work. We have to redo them
-        $this->removeBinaries( $package );
+        if( method_exists($this,'removeBinaries') )
+        {
+            $this->removeBinaries( $package );
+        }
+        else
+        {
+            $this->binaryInstaller->removeBinaries( $package );
+        }
+
         $this->ezpublishLegacyDir = $actualLegacyDir;
-        $this->installBinaries( $package );
+        if( method_exists($this,'installBinaries') )
+        {
+            $this->installBinaries( $package );
+        }
+        else
+        {
+            $this->binaryInstaller->installBinaries( $package, $this->getInstallPath( $package ) );
+        }
     }
 
     /**
