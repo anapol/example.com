@@ -7,4 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'eZ\\Publish\\Composer' => array($vendorDir . '/ezsystems/ezpublish-legacy-installer/src'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
+    'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
 );
