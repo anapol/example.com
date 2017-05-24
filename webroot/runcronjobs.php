@@ -1,1 +1,0 @@
-../ezpublish-legacy/runcronjobs.php

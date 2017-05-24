@@ -1,1 +1,0 @@
-../ezpublish-legacy/autoload.php

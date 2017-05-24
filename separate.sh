@@ -17,6 +17,7 @@ function relative_path() {
   fi
   echo $_result
 }
+
 function symlink () {
   if [ -e "$2" ]; then
     echo "NOT linking $1 -> $2, file exists..."
@@ -24,6 +25,14 @@ function symlink () {
   fi
   echo Linking "$1" "->" "$2"
   ln -s "$1" "$2"
+}
+
+function rename_to_upstream () {
+  SUBDIR="$1"
+  if [ -d "$EZPCHECKOUT"/"$SUBDIR" -a ! -L "$EZPCHECKOUT"/"$SUBDIR" ]; then
+   echo Moving "$EZPCHECKOUT"/"$SUBDIR" to "$EZPCHECKOUT"/"$SUBDIR".upstream
+   mv "$EZPCHECKOUT"/"$SUBDIR" "$EZPCHECKOUT"/"$SUBDIR".upstream
+  fi
 }
 
 EZPCHECKOUT=$(relative_path $1)
@@ -40,68 +49,43 @@ if [ -z $6 ]; then
 fi
 
 
-echo "Creating a deployable copy at $DEST"
+#echo "Symlinking everything to the ezpublish-legacy checkout..."
+
+#REL_DEST_TO_EZPCHECKOUT=$(relative_path $EZPCHECKOUT $DEST)
+#for F in "$EZPCHECKOUT"/*; do
+# symlink "$REL_DEST_TO_EZPCHECKOUT"/"$(basename $F)" "$DEST"/"$(basename $F)"
+#done
 
 
-echo "Symlinking everything to the ezpublish-legacy checkout..."
-
-REL_DEST_TO_EZPCHECKOUT=$(relative_path $EZPCHECKOUT $DEST)
-for F in "$EZPCHECKOUT"/*; do
- symlink "$REL_DEST_TO_EZPCHECKOUT"/"$(basename $F)" "$DEST"/"$(basename $F)"
-done
-
-
-echo "### Relinking extensions"
-rm "$DEST"/extension
-symlink "$(relative_path $AAEXTENSIONDIR $DEST)" "$DEST"/extension
+echo "### Relinking extension(s)"
+rename_to_upstream extension
+symlink "$(relative_path $AAEXTENSIONDIR $EZPCHECKOUT)" "$EZPCHECKOUT"/extension
 
 for extension in ezformtoken ezjscore ezoe; do
- symlink "$(relative_path $EZPCHECKOUT $AAEXTENSIONDIR)"/extension/$extension "$DEST"/extension/$extension
+ symlink "$(relative_path $EZPCHECKOUT $AAEXTENSIONDIR)"/extension.upstream/$extension "$EZPCHECKOUT"/extension/$extension
 done
 
 
 echo "### Relinking var"
-rm "$DEST"/var
-symlink "$(relative_path $AAVARDIR $DEST)" "$DEST"/var
+rename_to_upstream "var"
+symlink "$(relative_path $AAVARDIR $DEST)" "$EZPCHECKOUT"/var
 
 
-echo "### Relinking share"
-rm "$DEST"/share
-mkdir "$DEST"/share
+echo "### Relinking share locale & translations"
+rename_to_upstream "share/locale"
+symlink "$(relative_path $AAI18NDIR/locale $EZPCHECKOUT/share/)" "$EZPCHECKOUT"/share/locale
 
-REL_DEST_TO_EZPCHECKOUT=$(relative_path $EZPCHECKOUT $DEST/share)
-for F in "$EZPCHECKOUT"/share/*; do
- symlink "$REL_DEST_TO_EZPCHECKOUT"/share/"$(basename $F)" "$DEST"/share/"$(basename $F)"
-done
-
-rm "$DEST"/share/locale
-symlink "$(relative_path $AAI18NDIR/locale $DEST/share/)" "$DEST"/share/locale
-
-rm "$DEST"/share/translations
-symlink "$(relative_path $AAI18NDIR/translations $DEST/share/)" "$DEST"/share/translations
+rename_to_upstream "share/translations"
+symlink "$(relative_path $AAI18NDIR/translations $EZPCHECKOUT/share/)" "$EZPCHECKOUT"/share/translations
 
 
 echo "### Relinking settings"
-rm "$DEST"/settings
-mkdir "$DEST"/settings
+rename_to_upstream "settings/siteaccess"
+symlink "$(relative_path $AASETTINGSDIR/siteaccess $EZPCHECKOUT/settings/)" "$EZPCHECKOUT"/settings/siteaccess
 
-REL_DEST_TO_EZPCHECKOUT=$(relative_path $EZPCHECKOUT $DEST/settings)
-for F in "$EZPCHECKOUT"/settings/*; do
- symlink "$REL_DEST_TO_EZPCHECKOUT"/settings/"$(basename $F)" "$DEST"/settings/"$(basename $F)"
-done
+rename_to_upstream settings/override
+symlink "$(relative_path $AASETTINGSDIR/override $EZPCHECKOUT/settings/)" "$EZPCHECKOUT"/settings/override
 
-rm "$DEST"/settings/siteaccess
-symlink "$(relative_path $AASETTINGSDIR/siteaccess $DEST/settings/)" "$DEST"/settings/siteaccess
-
-rm "$DEST"/settings/override
-symlink "$(relative_path $AASETTINGSDIR/override $DEST/settings/)" "$DEST"/settings/override
-
-
-
-# autoload.php uses __DIR__./var/ reference, which isn't resolved to the relinked var dir...
-echo "### Relinking autoload.php"
-rm "$DEST"/autoload.php
-cp $EZPCHECKOUT/autoload.php "$DEST"/autoload.php
 
 echo "Done."
 
